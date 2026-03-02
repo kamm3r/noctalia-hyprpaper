@@ -1,0 +1,43 @@
+{
+  "id": "hyprpaper",
+  "name": "Hyprpaper",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "Noctalia",
+  "license": "MIT",
+  "description": "Wallpaper selector with local wallpapers and Wallhaven integration",
+  "entryPoints": {
+    "barWidget": "BarWidget.qml",
+    "panel": "Panel.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "directory": "~/Pictures/Wallpapers",
+      "viewMode": "single",
+      "sortOrder": "name",
+      "setWallpaperOnAllMonitors": true,
+      "enableMultiMonitorDirectories": false,
+      "showHiddenFiles": false,
+      "hideWallpaperFilenames": false,
+      "useSolidColor": false,
+      "solidColor": "#1a1a2e",
+      "useWallhaven": false,
+      "wallhavenQuery": "",
+      "wallhavenApiKey": "",
+      "wallhavenCategories": "111",
+      "wallhavenPurity": "100",
+      "wallhavenSorting": "relevance",
+      "wallhavenOrder": "desc",
+      "wallhavenRatios": "",
+      "wallhavenResolutionWidth": "",
+      "wallhavenResolutionHeight": "",
+      "wallhavenResolutionMode": "atleast",
+      "monitorDirectories": [],
+      "favorites": [],
+      "panelPosition": "bottom_center"
+    }
+  }
+}

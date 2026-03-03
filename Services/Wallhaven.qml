@@ -1,9 +1,11 @@
+pragma Singleton
+
 import QtQuick
 import Quickshell
 import qs.Commons
 import qs.Services.UI
 
-Item {
+QtObject {
   id: root
 
   property bool fetching: false

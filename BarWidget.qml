@@ -2,8 +2,12 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.Commons
+import qs.Modules.Bar.Extras
+import qs.Modules.Panels.Settings
+import qs.Services.Hardware
+import qs.Services.UI
 import qs.Widgets
-import "Services/UI" as PluginServices
+import "./Services"
 
 Item {
   id: root
@@ -13,57 +17,38 @@ Item {
   property string widgetId: ""
   property string section: ""
 
-  PluginServices.HyprpaperService {
-    id: hyprpaperService
+  readonly property string screenName: screen?.name ?? ""
+
+  implicitWidth: pill.width
+  implicitHeight: pill.height
+
+  visible: true
+
+  function getCurrentWallpaperName() {
+    var path = Hyprpaper.getWallpaper(screenName);
+    if (!path || path === "") return "";
+    if (Hyprpaper.isSolidColorPath(path)) return "Solid color";
+    return path.split('/').pop();
   }
 
-  readonly property string screenName: screen?.name ?? ""
-  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
-  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+  BarPill {
+    id: pill
 
-  readonly property var settings: pluginApi?.pluginSettings ?? {}
-
-  implicitWidth: row.implicitWidth + Style.marginM * 2
-  implicitHeight: capsuleHeight
-
-  Rectangle {
-    id: visualCapsule
-    width: root.implicitWidth
-    height: root.implicitHeight
-    x: Style.pixelAlignCenter(parent.width, width)
-    y: Style.pixelAlignCenter(parent.height, height)
-
-    radius: Style.radiusL
-    color: mouseArea.containsMouse ? Color.mHover : Style.capsuleColor
-    border.color: Style.capsuleBorderColor
-    border.width: Style.capsuleBorderWidth
-
-    RowLayout {
-      id: row
-      anchors.centerIn: parent
-      spacing: Style.marginS
-
-      NIcon {
-        icon: "wallpaper-selector"
-        color: Color.mPrimary
+    screen: root.screen
+    oppositeDirection: BarService.getPillDirection(root)
+    customIconColor: Color.resolveColorKeyOptional(root.iconColorKey)
+    customTextColor: Color.resolveColorKeyOptional(root.textColorKey)
+    icon: "wallpaper-selector"
+    autoHide: false
+    text: ""
+    tooltipText: getCurrentWallpaperName() || pluginApi?.tr("bar.tooltip")
+    onClicked: {
+      if (pluginApi) {
+        pluginApi.openPanel(root.screen, this);
       }
     }
-  }
-
-  MouseArea {
-    id: mouseArea
-    anchors.fill: parent
-    hoverEnabled: true
-    cursorShape: Qt.PointingHandCursor
-
-    acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-    onClicked: mouse => {
-      if (mouse.button === Qt.LeftButton) {
-        pluginApi?.openPanel(root.screen, root)
-      } else if (mouse.button === Qt.RightButton) {
-        hyprpaperService.setRandomWallpaper()
-      }
+    onRightClicked: {
+      Hyprpaper.setRandomWallpaper();
     }
   }
 }

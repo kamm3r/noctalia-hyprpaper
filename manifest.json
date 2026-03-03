@@ -37,6 +37,7 @@
       "wallhavenResolutionMode": "atleast",
       "monitorDirectories": [],
       "favorites": [],
+      "wallpaperFitMode": "cover",
       "panelPosition": "bottom_center"
     }
   }

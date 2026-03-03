@@ -26,6 +26,7 @@
   "wallpaper.panel.resolution-label": "Resolution",
   "wallpaper.wallhaven.loading": "Loading...",
   "wallpaper.wallhaven.no-results": "No results",
+  "bar.tooltip": "Click to open wallpaper selector, right-click for random wallpaper",
   "placeholders.search-wallhaven": "Search Wallhaven...",
   "placeholders.search-wallpapers": "Search wallpapers...",
   "tooltips.switch-to-light-mode": "Switch to light mode",

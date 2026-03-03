@@ -1,3 +1,5 @@
+pragma Singleton
+
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -5,11 +7,11 @@ import qs.Commons
 import qs.Services.Theming
 import qs.Services.UI
 
-Item {
+Singleton {
   id: root
 
   readonly property ListModel fillModeModel: ListModel {}
-  readonly property string defaultDirectory: Settings.preprocessPath(Settings.data.wallpaper.directory)
+  property string defaultDirectory: ""
   readonly property string solidColorPrefix: "solid://"
 
   readonly property ListModel transitionsModel: ListModel {}
@@ -36,8 +38,22 @@ Item {
 
   property var currentBrowsePaths: ({})
 
+  property var wallpaperSettings: null
+
+  Component.onCompleted: {
+    function connectSettings() {
+      if (typeof Settings !== 'undefined' && Settings.data?.wallpaper) {
+        wallpaperSettings = Settings.data.wallpaper;
+      } else {
+        Qt.callLater(connectSettings);
+      }
+    }
+    Qt.callLater(connectSettings);
+  }
+
   Connections {
-    target: Settings.data.wallpaper
+    target: wallpaperSettings
+    ignoreUnknownSignals: true
     function onDirectoryChanged() {
       root.usedRandomWallpapers = {};
       root.refreshWallpapersList();
@@ -97,16 +113,33 @@ Item {
   }
 
   function init() {
-    Logger.i("Hyprpaper", "Service started")
-
+    Logger.i("Hyprpaper", "Service starting...")
     root.defaultWallpaper = ""
-    Qt.callLater(() => {
-                   if (typeof Settings !== 'undefined' && Settings.cacheDir) {
-                     wallpaperCacheFile = Settings.cacheDir + "hyprpaper.json";
-                     wallpaperCacheView.path = wallpaperCacheFile;
-                   }
-                 });
-    Qt.callLater(refreshWallpapersList);
+    
+    function loadSettings() {
+      if (typeof Settings !== 'undefined' && Settings.data && Settings.data.wallpaper) {
+        if (Settings.data.wallpaper.directory) {
+          root.defaultDirectory = Settings.preprocessPath(Settings.data.wallpaper.directory);
+          Logger.i("Hyprpaper", "Loaded directory:", root.defaultDirectory);
+        } else {
+          root.defaultDirectory = "";
+          Logger.w("Hyprpaper", "No directory set in settings");
+        }
+        
+        Qt.callLater(() => {
+          if (typeof Settings !== 'undefined' && Settings.cacheDir) {
+            wallpaperCacheFile = Settings.cacheDir + "hyprpaper.json";
+            wallpaperCacheView.path = wallpaperCacheFile;
+          }
+        });
+        
+        Qt.callLater(refreshWallpapersList);
+      } else {
+        Logger.w("Hyprpaper", "Settings not available, retrying in 500ms...");
+        Qt.callLater(() => { Qt.callLater(loadSettings); });
+      }
+    }
+    Qt.callLater(loadSettings);
   }
 
   function isSolidColorPath(path) {
@@ -142,7 +175,13 @@ Item {
 
   function getMonitorDirectory(screenName) {
     if (!Settings.data.wallpaper.enableMultiMonitorDirectories) {
-      return root.defaultDirectory;
+      if (root.defaultDirectory) {
+        return root.defaultDirectory;
+      }
+      if (typeof Settings !== 'undefined' && Settings.data?.wallpaper?.directory) {
+        return Settings.preprocessPath(Settings.data.wallpaper.directory);
+      }
+      return "";
     }
 
     var monitor = getMonitorConfig(screenName);
@@ -150,7 +189,13 @@ Item {
       return Settings.preprocessPath(monitor.directory);
     }
 
-    return root.defaultDirectory;
+    if (root.defaultDirectory) {
+      return root.defaultDirectory;
+    }
+    if (typeof Settings !== 'undefined' && Settings.data?.wallpaper?.directory) {
+      return Settings.preprocessPath(Settings.data.wallpaper.directory);
+    }
+    return "";
   }
 
   function setMonitorDirectory(screenName, directory) {
@@ -195,9 +240,10 @@ Item {
     if (!path) return;
 
     var monitor = screenName || "HDMI-A-1";
-    var command = "hyprctl setprop monitor " + monitor + " wallpaper " + path;
+    var fitMode = Settings.data.wallpaper.wallpaperFitMode || "cover";
+    var command = "hyprctl hyprpaper wallpaper '" + monitor + ", " + path + ", " + fitMode + "'";
 
-    Logger.d("Hyprpaper", "Setting wallpaper:", monitor, path);
+    Logger.d("Hyprpaper", "Setting wallpaper:", monitor, path, "fit:", fitMode);
 
     var hyprlandProcess = Qt.createQmlObject(`
       import QtQuick
@@ -441,8 +487,15 @@ Item {
   }
 
   function refreshWallpapersList() {
+    if (typeof Settings === 'undefined' || !Settings.data?.wallpaper) {
+      Logger.w("Hyprpaper", "Settings not available for refreshWallpapersList");
+      Qt.callLater(refreshWallpapersList);
+      return;
+    }
+    
     var mode = Settings.data.wallpaper.viewMode;
-    Logger.d("Hyprpaper", "refreshWallpapersList", "viewMode:", mode);
+    var directory = getMonitorDirectory(Quickshell.screens.length > 0 ? Quickshell.screens[0].name : "");
+    Logger.d("Hyprpaper", "refreshWallpapersList", "viewMode:", mode, "directory:", directory);
     scanningCount = 0;
 
     if (mode === "recursive") {
@@ -692,6 +745,7 @@ Item {
 
   FileView {
     id: wallpaperCacheView
+    path: root.wallpaperCacheFile
     printErrors: false
     watchChanges: false
 
@@ -722,6 +776,10 @@ Item {
     interval: 500
     repeat: false
     onTriggered: {
+      if (!wallpaperCacheView.path) {
+        Logger.w("Hyprpaper", "Cache file path not set, skipping save");
+        return;
+      }
       wallpaperCacheAdapter.wallpapers = root.currentWallpapers;
       wallpaperCacheAdapter.defaultWallpaper = root.defaultWallpaper;
       wallpaperCacheAdapter.usedRandomWallpapers = root.usedRandomWallpapers;

@@ -7,8 +7,10 @@
   "license": "MIT",
   "description": "Wallpaper selector with local wallpapers and Wallhaven integration",
   "entryPoints": {
+    "main":"Main.qml",    
     "barWidget": "BarWidget.qml",
-    "panel": "Panel.qml"
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
   },
   "dependencies": {
     "plugins": []
@@ -24,21 +26,14 @@
       "hideWallpaperFilenames": false,
       "useSolidColor": false,
       "solidColor": "#1a1a2e",
-      "useWallhaven": false,
-      "wallhavenQuery": "",
-      "wallhavenApiKey": "",
-      "wallhavenCategories": "111",
-      "wallhavenPurity": "100",
-      "wallhavenSorting": "relevance",
-      "wallhavenOrder": "desc",
-      "wallhavenRatios": "",
-      "wallhavenResolutionWidth": "",
-      "wallhavenResolutionHeight": "",
-      "wallhavenResolutionMode": "atleast",
       "monitorDirectories": [],
       "favorites": [],
-      "wallpaperFitMode": "cover",
-      "panelPosition": "bottom_center"
+      "fillMode": "cover",
+      "panelPosition": "bottom_center",
+      "splash": true,
+      "splash_offset": 2.0,
+      "splash_opacity": 0.8,
+      "ipc": true
     }
   }
 }

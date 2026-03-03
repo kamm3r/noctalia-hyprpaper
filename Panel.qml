@@ -378,7 +378,7 @@ Item {
         }
 
         NIconButton {
-          property string sortOrder: Settings.data.wallpaper.sortOrder || "name"
+          property string sortOrder: Settings.data.wallpaper.waSortOrder || "name"
           icon: {
             if (sortOrder === "date_desc") return "clock";
             if (sortOrder === "date_asc") return "history";
@@ -393,29 +393,29 @@ Item {
             else if (sortOrder === "date_asc") next = "name_desc";
             else if (sortOrder === "name_desc") next = "random";
             else next = "name";
-            Settings.data.wallpaper.sortOrder = next;
+            Settings.data.wallpaper.waSortOrder = next;
           }
           baseSize: Style.baseWidgetSize * 0.8
         }
 
         NIconButton {
-          property string fitMode: Settings.data.wallpaper.wallpaperFitMode || "cover"
+          property string fitMode: Settings.data.wallpaper.fillMode || "cover"
           icon: {
-            if (fitMode === "fill") return "aspect-ratio";
-            if (fitMode === "contain") return "aspect-ratio";
-            if (fitMode === "tile") return "grid";
-            if (fitMode === "stretch") return "arrows-out";
+            if (fitMode === "cover") return "crop-landscape";
+            if (fitMode === "tile") return "layout";
+            if (fitMode === "contain") return "container";
+            if (fitMode === "fill") return "arrows-maximize";
             return "arrows-in";
           }
           tooltipText: "Fit mode: " + fitMode
           onClicked: {
             var next = "cover";
-            if (fitMode === "cover") next = "contain";
-            else if (fitMode === "contain") next = "fill";
-            else if (fitMode === "fill") next = "stretch";
-            else if (fitMode === "stretch") next = "tile";
+            if (fitMode === "cover") next = "tile";
+            else if (fitMode === "tile") next = "fill";
+            else if (fitMode === "fill") next = "contain";
+            else if (fitMode === "contain") next = "cover";
             else next = "cover";
-            Settings.data.wallpaper.wallpaperFitMode = next;
+            Settings.data.wallpaper.fillMode = next;
           }
           baseSize: Style.baseWidgetSize * 0.8
         }

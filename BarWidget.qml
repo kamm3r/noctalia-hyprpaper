@@ -24,6 +24,8 @@ Item {
 
   visible: true
 
+  scale: 1.0
+
   function getCurrentWallpaperName() {
     var path = Hyprpaper.getWallpaper(screenName);
     if (!path || path === "") return "";
@@ -49,6 +51,24 @@ Item {
     }
     onRightClicked: {
       Hyprpaper.setRandomWallpaper();
+    }
+  }
+
+  MouseArea {
+    anchors.fill: pill
+    onPressed: root.scale = 0.97
+    onReleased: root.scale = 1.0
+    onClicked: {
+      if (pluginApi) {
+        pluginApi.openPanel(root.screen, pill);
+      }
+    }
+  }
+
+  Behavior on scale {
+    NumberAnimation {
+      duration: 150
+      easing.type: Easing.OutCubic
     }
   }
 }

@@ -71,6 +71,7 @@ Singleton {
         }
       }
     }
+    
     function onEnableMultiMonitorDirectoriesChanged() {
       root.usedRandomWallpapers = {};
       root.refreshWallpapersList();
@@ -244,13 +245,13 @@ Singleton {
   function setWallpaperOnHyprland(path, screenName) {
     if (!path) return;
 
-    var monitor = screenName || "HDMI-A-1";
-    var fitMode = Settings.data.wallpaper.fillMode || "cover";
-    var command = "hyprctl hyprpaper wallpaper '" + monitor + ", " + path + ", " + fitMode + "'";
+    const monitor = screenName || "HDMI-A-1";
+    const fitMode = Settings.data.wallpaper.fillMode || "cover";
+    const command = "hyprctl hyprpaper wallpaper '" + monitor + ", " + path + ", " + fitMode + "'";
 
     Logger.d("Hyprpaper", "Setting wallpaper:", monitor, path, "fit:", fitMode);
 
-    var hyprlandProcess = Qt.createQmlObject(`
+    const hyprlandProcess = Qt.createQmlObject(`
       import QtQuick
       import Quickshell.Io
       Process {

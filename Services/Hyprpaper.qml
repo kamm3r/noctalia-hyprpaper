@@ -546,7 +546,7 @@ Singleton {
     if (updateList) scanningCount++;
     Logger.i("Hyprpaper", "Starting scan for", screenName, "in", directory, "recursive:", recursive);
 
-    var filters = ["*.jpg", "*.jpeg", "*.png", "*.gif", "*.webp", "*.bmp"];
+    var filters = ["*.jpg", "*.jpeg", "*.png", "*.bmp", "*.webp", "*.svg"];
     var findArgs = ["find", "-L", directory];
 
     if (!recursive) {

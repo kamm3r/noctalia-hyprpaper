@@ -22,8 +22,7 @@ Singleton {
   property var currentWallpapers: ({})
   property var alphabeticalIndices: ({})
   property var usedRandomWallpapers: ({})
-
-  property bool isInitialized: false
+  
   property string wallpaperCacheFile: ""
 
   readonly property bool scanning: (scanningCount > 0)

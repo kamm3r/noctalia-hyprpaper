@@ -5,7 +5,6 @@ Wallpaper selector plugin for Noctalia with local wallpapers and Wallhaven integ
 ## Features
 
 - **Local Wallpapers**: Browse and select wallpapers from a local directory
-- **Wallhaven Integration**: Search and download wallpapers from Wallhaven
 - **Multiple View Modes**: Single wallpaper or favorites-based selection
 - **Multi-Monitor Support**: Configure separate wallpapers per monitor
 - **Fill Modes**: Support for cover, fill, contain, and center fill modes
@@ -48,6 +47,6 @@ This plugin is typically pre-installed with Noctalia. If you need to install it 
 ## Usage
 
 1. Open the wallpaper panel from the Noctalia bar
-2. Browse local wallpapers or search Wallhaven
+2. Browse local wallpapers
 3. Click a wallpaper to apply it
 4. Use the favorites feature to save frequently used wallpapers

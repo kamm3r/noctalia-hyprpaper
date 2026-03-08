@@ -1,6 +1,6 @@
 # Hyprpaper
 
-Wallpaper selector plugin for Noctalia with local wallpapers and Wallhaven integration.
+Wallpaper selector plugin for Noctalia with local wallpapers.
 
 ## Features
 

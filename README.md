@@ -18,15 +18,9 @@ The plugin can be configured through the Noctalia settings or by editing the `me
 |---------|------|-------------|
 | `directory` | string | Path to wallpaper directory (default: `~/Pictures/Wallpapers`) |
 | `viewMode` | string | Display mode: `single` or `favorites` |
-| `sortOrder` | string | Sort order: `name`, `date`, or `random` |
 | `setWallpaperOnAllMonitors` | boolean | Apply wallpaper to all monitors |
 | `enableMultiMonitorDirectories` | boolean | Enable separate directories per monitor |
-| `showHiddenFiles` | boolean | Show hidden files in browser |
-| `hideWallpaperFilenames` | boolean | Hide filenames in UI |
-| `useSolidColor` | boolean | Use solid color instead of wallpaper |
-| `solidColor` | string | Hex color for solid color mode |
 | `monitorDirectories` | array | Per-monitor directory mappings |
-| `favorites` | array | List of favorite wallpaper paths |
 | `fillMode` | string | Image fill mode: `cover`, `fill`, `contain`, `center` |
 | `panelPosition` | string | Panel position: `bottom_center`, `top_center`, etc. |
 | `splash` | boolean | Enable splash effect on change |

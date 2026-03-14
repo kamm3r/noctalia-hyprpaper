@@ -3,7 +3,7 @@
   "name": "Hyprpaper",
   "version": "1.0.0",
   "minNoctaliaVersion": "3.6.0",
-  "author": "Noctalia",
+  "author": "kamm3r",
   "license": "MIT",
   "description": "Wallpaper selector with local wallpapers",
   "entryPoints": {

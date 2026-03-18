@@ -34,10 +34,6 @@ The plugin can be configured through the Noctalia settings or by editing the `me
 - Hyprland
 - hyprpaper
 
-## Installation
-
-This plugin is typically pre-installed with Noctalia. If you need to install it manually, place the plugin folder in your Noctalia plugins directory.
-
 ## Usage
 
 1. Open the wallpaper panel from the Noctalia bar

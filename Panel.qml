@@ -47,7 +47,7 @@ Item {
                 }
 
                 NText {
-                    text: "Wallpaper"
+                    text: pluginApi?.tr("panel.title")
                     Layout.fillWidth: true
                     pointSize: Style.fontSizeL
                     font.weight: Font.Bold
@@ -56,7 +56,7 @@ Item {
                 // ── Random wallpaper button ──
                 NIconButton {
                     icon: "shuffle"
-                    tooltipText: "Random wallpaper"
+                    tooltipText: pluginApi?.tr("panel.randomTooltip")
                     onClicked: {
                         const screen =
                             Settings.data.wallpaper
@@ -71,6 +71,7 @@ Item {
 
                 NIconButton {
                     icon: "close"
+                    tooltipText: pluginApi?.tr("common.close")
                     onClicked: {
                         pluginApi.closePanel(
                             pluginApi.panelOpenScreen
@@ -84,7 +85,7 @@ Item {
             // ── Monitor toggle ──────────────────────────
             NToggle {
                 Layout.fillWidth: true
-                label: "Apply to all monitors"
+                label: pluginApi?.tr("panel.applyAllMonitors")
                 checked:
                     Settings.data.wallpaper
                         .setWallpaperOnAllMonitors
@@ -127,13 +128,13 @@ Item {
 
                 NIconButton {
                     icon: "folder"
-                    tooltipText: "Change folder"
+                    tooltipText: pluginApi?.tr("panel.changeFolderTooltip")
                     onClicked: folderPicker.open()
                 }
 
                 NTextInput {
                     Layout.fillWidth: true
-                    placeholderText: "Search wallpapers"
+                    placeholderText: pluginApi?.tr("panel.searchPlaceholder")
                     onTextChanged: root.filterText = text
                 }
             }
@@ -149,14 +150,14 @@ Item {
                     "cover"
 
                 readonly property var fitModeOptions: [
-                    { key: "cover", label: "Cover" },
-                    { key: "contain", label: "Contain" },
-                    { key: "tile", label: "Tile" },
-                    { key: "fill", label: "Fill" }
+                    { key: "cover", label: pluginApi?.tr("panel.fillModeCover") },
+                    { key: "contain", label: pluginApi?.tr("panel.fillModeContain") },
+                    { key: "tile", label: pluginApi?.tr("panel.fillModeTile") },
+                    { key: "fill", label: pluginApi?.tr("panel.fillModeFill") }
                 ]
 
                 NText {
-                    text: "Fill mode"
+                    text: pluginApi?.tr("panel.fillMode")
                     color: Color.mOnSurfaceVariant
                     pointSize: Style.fontSizeS
                     Layout.rightMargin: Style.marginXS
@@ -239,7 +240,7 @@ Item {
                 }
 
                 NText {
-                    text: "Cycle every"
+                    text: pluginApi?.tr("panel.cycleEvery")
                     color: Color.mOnSurfaceVariant
                     pointSize: Style.fontSizeS
                 }
@@ -293,7 +294,7 @@ Item {
                 }
 
                 NText {
-                    text: "seconds"
+                    text: pluginApi?.tr("panel.seconds")
                     color: Color.mOnSurfaceVariant
                     pointSize: Style.fontSizeS
                 }
@@ -301,10 +302,10 @@ Item {
                 // ── Quick presets ────────────────────
                 Repeater {
                     model: [
-                        { label: "30s", value: 30 },
-                        { label: "5m", value: 300 },
-                        { label: "30m", value: 1800 },
-                        { label: "1h", value: 3600 }
+                        { label: pluginApi?.tr("panel.preset30s"), value: 30 },
+                        { label: pluginApi?.tr("panel.preset5m"), value: 300 },
+                        { label: pluginApi?.tr("panel.preset30m"), value: 1800 },
+                        { label: pluginApi?.tr("panel.preset1h"), value: 3600 }
                     ]
 
                     Rectangle {
@@ -388,12 +389,12 @@ Item {
                             model: [
                                 {
                                     key: "sequential",
-                                    label: "Sequential",
+                                    label: pluginApi?.tr("panel.orderSequential"),
                                     icon: "arrow-right"
                                 },
                                 {
                                     key: "random",
-                                    label: "Random",
+                                    label: pluginApi?.tr("panel.orderRandom"),
                                     icon: "shuffle"
                                 }
                             ]
@@ -504,7 +505,7 @@ Item {
 
     FolderDialog {
         id: folderPicker
-        title: "Select wallpaper folder"
+        title: pluginApi?.tr("panel.changeFolderTooltip")
 
         onAccepted: {
             var p = selectedFolder
@@ -608,8 +609,8 @@ Item {
             NText {
                 Layout.alignment: Qt.AlignHCenter
                 text: filterText
-                    ? "No wallpapers match your search"
-                    : "No wallpapers found"
+                    ? pluginApi?.tr("panel.emptyState.noResults")
+                    : pluginApi?.tr("panel.emptyState.noWallpapers")
                 color: Color.mOnSurfaceVariant
                 pointSize: Style.fontSizeM
             }
@@ -617,8 +618,8 @@ Item {
             NText {
                 Layout.alignment: Qt.AlignHCenter
                 text: filterText
-                    ? "Try a different search term"
-                    : "Click the folder icon to pick a directory"
+                    ? pluginApi?.tr("panel.emptyState.tryDifferentSearch")
+                    : pluginApi?.tr("panel.emptyState.pickDirectory")
                 color: Color.mOnSurfaceVariant
                 pointSize: Style.fontSizeS
             }

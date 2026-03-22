@@ -2,9 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.Commons
-import qs.Modules.Bar.Extras
-import qs.Modules.Panels.Settings
-import qs.Services.Hardware
 import qs.Services.UI
 import qs.Widgets
 import "./Services"
@@ -16,59 +13,69 @@ Item {
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
+  property int sectionWidgetIndex: -1
+  property int sectionWidgetsCount: 0
+
+  // Settings access pattern
+  property var cfg: pluginApi?.pluginSettings || ({})
+  property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
+
+  // Bar layout awareness
+  readonly property string barPosition: Settings.getBarPositionForScreen(screen?.name)
+  readonly property bool isVertical: barPosition === "left" || barPosition === "right"
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screen?.name)
 
   readonly property string screenName: screen?.name ?? ""
 
-  implicitWidth: pill.width
-  implicitHeight: pill.height
+  implicitWidth: isVertical ? capsuleHeight : pill.width
+  implicitHeight: isVertical ? pill.height : capsuleHeight
 
   visible: true
-
-  scale: 1.0
 
   function getCurrentWallpaperName() {
     var path = Hyprpaper.getWallpaper(screenName);
     if (!path || path === "") return "";
-    if (Hyprpaper.isSolidColorPath(path)) return "Solid color";
+    if (Hyprpaper.isSolidColorPath(path)) return pluginApi?.tr("bar.solidColor") ?? "Solid color";
     return path.split('/').pop();
   }
 
-  BarPill {
-    id: pill
-
-    screen: root.screen
-    oppositeDirection: BarService.getPillDirection(root)
-    customIconColor: Color.resolveColorKeyOptional(root.iconColorKey)
-    customTextColor: Color.resolveColorKeyOptional(root.textColorKey)
-    icon: "wallpaper-selector"
-    autoHide: false
-    text: ""
-    tooltipText: getCurrentWallpaperName() || pluginApi?.tr("bar.tooltip")
-    onClicked: {
-      if (pluginApi) {
-        pluginApi.openPanel(root.screen, this);
+  // Context menu (right-click)
+  NPopupContextMenu {
+    id: contextMenu
+    model: [
+      { "label": pluginApi?.tr("menu.settings") ?? "Widget settings", "action": "settings", "icon": "settings" }
+    ]
+    onTriggered: action => {
+      contextMenu.close();
+      PanelService.closeContextMenu(screen);
+      if (action === "settings") {
+        BarService.openPluginSettings(screen, pluginApi.manifest);
       }
-    }
-    onRightClicked: {
-      Hyprpaper.setRandomWallpaper();
     }
   }
 
   MouseArea {
-    anchors.fill: pill
-    onPressed: root.scale = 0.97
-    onReleased: root.scale = 1.0
-    onClicked: {
-      if (pluginApi) {
-        pluginApi.openPanel(root.screen, pill);
+    anchors.fill: parent
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
+    onClicked: mouse => {
+      if (mouse.button === Qt.LeftButton) {
+        if (pluginApi) pluginApi.togglePanel(root.screen, root);
+      } else if (mouse.button === Qt.RightButton) {
+        PanelService.showContextMenu(contextMenu, root, screen);
       }
     }
   }
 
-  Behavior on scale {
-    NumberAnimation {
-      duration: 150
-      easing.type: Easing.OutCubic
+  NIconButtonHot {
+    id: pill
+    anchors.centerIn: parent
+    screen: root.screen
+    icon: "wallpaper-selector"
+    tooltipText: getCurrentWallpaperName() || pluginApi?.tr("bar.tooltip")
+    onClicked: {
+      if (pluginApi) {
+        pluginApi.togglePanel(root.screen, this);
+      }
     }
   }
 }

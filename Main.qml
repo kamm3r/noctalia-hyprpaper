@@ -5,6 +5,7 @@ import qs.Commons
 import "./Services"
 
 Item {
+  id: root
   property var pluginApi: null
 
   Component.onCompleted: {
@@ -13,10 +14,11 @@ Item {
 
   IpcHandler {
     target: "plugin:hyprpaper"
+
     function toggle() {
       if (pluginApi) {
         pluginApi.withCurrentScreen(screen => {
-          pluginApi.openPanel(screen);
+          pluginApi.togglePanel(screen);
         });
       }
     }

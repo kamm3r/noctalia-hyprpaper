@@ -7,146 +7,126 @@ import qs.Services.UI
 import "./Services"
 
 ColumnLayout {
-    id: root
-    spacing: Style.marginL
+  id: root
+  spacing: Style.marginL
 
-    property var pluginApi: null
+  property var pluginApi: null
 
-    // Read from pluginApi (user's saved settings) with manifest fallback
-    property bool editSplash:
-        pluginApi?.pluginSettings?.splash ??
-        pluginApi?.manifest?.metadata?.defaultSettings?.splash ??
-        true
+  // Settings access pattern
+  property var cfg: pluginApi?.pluginSettings || ({})
+  property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
 
-    property real editSplashOffset:
-        pluginApi?.pluginSettings?.splash_offset ??
-        pluginApi?.manifest?.metadata?.defaultSettings?.splash_offset ??
-        20
+  // Edit copies of settings
+  property bool editSplash: cfg.splash ?? defaults.splash ?? true
+  property real editSplashOffset: cfg.splash_offset ?? defaults.splash_offset ?? 20
+  property real editSplashOpacity: cfg.splash_opacity ?? defaults.splash_opacity ?? 0.8
+  property bool editIpc: cfg.ipc ?? defaults.ipc ?? true
 
-    property real editSplashOpacity:
-        pluginApi?.pluginSettings?.splash_opacity ??
-        pluginApi?.manifest?.metadata?.defaultSettings?.splash_opacity ??
-        0.8
-
-    property bool editIpc:
-        pluginApi?.pluginSettings?.ipc ??
-        pluginApi?.manifest?.metadata?.defaultSettings?.ipc ??
-        true
-
-    function saveSettings() {
-        if (!pluginApi) {
-            Logger.e("Hyprpaper", "Cannot save: pluginApi is null")
-            return
-        }
-
-        // Save to plugin settings
-        pluginApi.pluginSettings.splash = root.editSplash
-        pluginApi.pluginSettings.splash_offset = root.editSplashOffset
-        pluginApi.pluginSettings.splash_opacity = root.editSplashOpacity
-        pluginApi.pluginSettings.ipc = root.editIpc
-        pluginApi.saveSettings()
-
-        Hyprpaper.updateHyprpaperConf(
-            root.editSplash,
-            root.editSplashOffset,
-            root.editSplashOpacity,
-            root.editIpc
-        )
-
-        Logger.i("Hyprpaper", "Settings saved successfully")
+  function saveSettings() {
+    if (!pluginApi) {
+      Logger.e("Hyprpaper", "Cannot save: pluginApi is null")
+      return
     }
 
-    // ========================================
-    // Misc Options Section
-    // ========================================
+    pluginApi.pluginSettings.splash = root.editSplash
+    pluginApi.pluginSettings.splash_offset = root.editSplashOffset
+    pluginApi.pluginSettings.splash_opacity = root.editSplashOpacity
+    pluginApi.pluginSettings.ipc = root.editIpc
+    pluginApi.saveSettings()
+
+    Hyprpaper.updateHyprpaperConf(
+      root.editSplash,
+      root.editSplashOffset,
+      root.editSplashOpacity,
+      root.editIpc
+    )
+
+    Logger.i("Hyprpaper", "Settings saved successfully")
+  }
+
+  NText {
+    text: pluginApi?.tr("settings.miscOptions")
+    pointSize: Style.fontSizeM
+    font.weight: Style.fontWeightBold
+    color: Color.mOnSurface
+    Layout.fillWidth: true
+  }
+
+  NToggle {
+    id: splashToggle
+    label: pluginApi?.tr("settings.enableSplash")
+    description: pluginApi?.tr("settings.splashDescription")
+    checked: root.editSplash
+    onToggled: (checked) => root.editSplash = checked
+    Layout.fillWidth: true
+  }
+
+  RowLayout {
+    Layout.fillWidth: true
+    spacing: Style.marginM
 
     NText {
-        text: "Misc Options"
-        pointSize: Style.fontSizeM
-        font.weight: Style.fontWeightBold
-        color: Color.mOnSurface
-        Layout.fillWidth: true
+      text: pluginApi?.tr("settings.splashOffset")
+      color: Color.mOnSurface
+      Layout.preferredWidth: 120
     }
 
-    // Splash Toggle
-    NToggle {
-        id: splashToggle
-        label: "Enable Splash"
-        description: "Render the Hyprland splash over the wallpaper"
-        checked: root.editSplash
-        onToggled: (checked) => root.editSplash = checked
-        Layout.fillWidth: true
+    NSlider {
+      id: offsetSlider
+      from: 0
+      to: 100
+      stepSize: 1
+      value: root.editSplashOffset
+      onMoved: root.editSplashOffset = value
+      Layout.fillWidth: true
     }
 
-    // Splash Offset
-    RowLayout {
-        Layout.fillWidth: true
-        spacing: Style.marginM
+    NText {
+      text: Math.round(root.editSplashOffset).toString()
+      color: Color.mOnSurfaceVariant
+      Layout.preferredWidth: 40
+      horizontalAlignment: Text.AlignRight
+    }
+  }
 
-        NText {
-            text: "Splash Offset"
-            color: Color.mOnSurface
-            Layout.preferredWidth: 120
-        }
+  RowLayout {
+    Layout.fillWidth: true
+    spacing: Style.marginM
 
-        NSlider {
-            id: offsetSlider
-            from: 0
-            to: 100
-            stepSize: 1
-            value: root.editSplashOffset
-            onMoved: root.editSplashOffset = value
-            Layout.fillWidth: true
-        }
-
-        NText {
-            text: Math.round(root.editSplashOffset).toString()
-            color: Color.mOnSurfaceVariant
-            Layout.preferredWidth: 40
-            horizontalAlignment: Text.AlignRight
-        }
+    NText {
+      text: pluginApi?.tr("settings.splashOpacity")
+      color: Color.mOnSurface
+      Layout.preferredWidth: 120
     }
 
-    // Splash Opacity
-    RowLayout {
-        Layout.fillWidth: true
-        spacing: Style.marginM
-
-        NText {
-            text: "Splash Opacity"
-            color: Color.mOnSurface
-            Layout.preferredWidth: 120
-        }
-
-        NSlider {
-            id: opacitySlider
-            from: 0
-            to: 1.0
-            stepSize: 0.1
-            value: root.editSplashOpacity
-            onMoved: root.editSplashOpacity = value
-            Layout.fillWidth: true
-        }
-
-        NText {
-            text: root.editSplashOpacity.toFixed(1)
-            color: Color.mOnSurfaceVariant
-            Layout.preferredWidth: 40
-            horizontalAlignment: Text.AlignRight
-        }
+    NSlider {
+      id: opacitySlider
+      from: 0
+      to: 1.0
+      stepSize: 0.1
+      value: root.editSplashOpacity
+      onMoved: root.editSplashOpacity = value
+      Layout.fillWidth: true
     }
 
-    // IPC Toggle
-    NToggle {
-        id: ipcToggle
-        label: "Enable IPC"
-        description: "WARNING: Disabling this will break the plugin's ability to change wallpapers!"
-        checked: root.editIpc
-        onToggled: (checked) => root.editIpc = checked
-        Layout.fillWidth: true
+    NText {
+      text: root.editSplashOpacity.toFixed(1)
+      color: Color.mOnSurfaceVariant
+      Layout.preferredWidth: 40
+      horizontalAlignment: Text.AlignRight
     }
+  }
 
-    Item {
-        Layout.fillHeight: true
-    }
+  NToggle {
+    id: ipcToggle
+    label: pluginApi?.tr("settings.enableIpc")
+    description: pluginApi?.tr("settings.ipcDescription")
+    checked: root.editIpc
+    onToggled: (checked) => root.editIpc = checked
+    Layout.fillWidth: true
+  }
+
+  Item {
+    Layout.fillHeight: true
+  }
 }

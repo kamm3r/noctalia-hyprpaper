@@ -1,31 +1,47 @@
 {
-  "wallpaper.panel.title": "Wallpaper",
-  "wallpaper.panel.apply-all-monitors-label": "Apply to all monitors",
-  "wallpaper.panel.apply-all-monitors-description": "Set the same wallpaper on all screens",
-  "wallpaper.panel.solid-color-tooltip": "Solid color",
-  "wallpaper.panel.color-extraction-enabled": "Color extraction enabled",
-  "wallpaper.panel.color-extraction-disabled": "Color extraction disabled",
-  "wallpaper.panel.no-wallpapers": "No wallpapers found",
-  "wallpaper.panel.sorting-label": "Sorting",
-  "wallpaper.panel.sorting-date-added": "Date Added",
-  "wallpaper.panel.sorting-relevance": "Relevance",
-  "wallpaper.panel.sorting-views": "Views",
-  "wallpaper.panel.sorting-favorites": "Favorites",
-  "wallpaper.panel.sorting-toplist": "Toplist",
-  "wallpaper.panel.order-label": "Order",
-  "wallpaper.panel.order-desc": "Descending",
-  "wallpaper.panel.order-asc": "Ascending",
-  "wallpaper.panel.purity-label": "Purity",
-  "wallpaper.panel.ratios-label": "Aspect Ratio",
-  "wallpaper.panel.ratios-any": "Any",
-  "wallpaper.panel.resolution-label": "Resolution",
-  "bar.tooltip": "Click to open wallpaper selector, right-click for random wallpaper",
-  "placeholders.search-wallpapers": "Search wallpapers...",
-  "tooltips.switch-to-light-mode": "Switch to light mode",
-  "tooltips.switch-to-dark-mode": "Switch to dark mode",
-  "common.close": "Close",
-  "common.local": "Local",
-  "common.random": "Random",
-  "common.apply": "Apply",
-  "common.unknown": "Unknown"
+  "bar": {
+    "tooltip": "Click to open wallpaper selector, right-click for random wallpaper",
+    "solidColor": "Solid color"
+  },
+  "menu": {
+    "settings": "Widget settings"
+  },
+  "panel": {
+    "title": "Wallpaper",
+    "randomTooltip": "Random wallpaper",
+    "applyAllMonitors": "Apply to all monitors",
+    "searchPlaceholder": "Search wallpapers",
+    "changeFolderTooltip": "Change folder",
+    "fillMode": "Fill mode",
+    "fillModeCover": "Cover",
+    "fillModeContain": "Contain",
+    "fillModeTile": "Tile",
+    "fillModeFill": "Fill",
+    "cycleEvery": "Cycle every",
+    "seconds": "seconds",
+    "preset30s": "30s",
+    "preset5m": "5m",
+    "preset30m": "30m",
+    "preset1h": "1h",
+    "orderSequential": "Sequential",
+    "orderRandom": "Random",
+    "emptyState": {
+      "noResults": "No wallpapers match your search",
+      "noWallpapers": "No wallpapers found",
+      "tryDifferentSearch": "Try a different search term",
+      "pickDirectory": "Click the folder icon to pick a directory"
+    }
+  },
+  "settings": {
+    "miscOptions": "Misc Options",
+    "enableSplash": "Enable Splash",
+    "splashDescription": "Render the Hyprland splash over the wallpaper",
+    "splashOffset": "Splash Offset",
+    "splashOpacity": "Splash Opacity",
+    "enableIpc": "Enable IPC",
+    "ipcDescription": "WARNING: Disabling this will break the plugin's ability to change wallpapers!"
+  },
+  "common": {
+    "close": "Close"
+  }
 }

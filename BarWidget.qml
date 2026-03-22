@@ -69,7 +69,6 @@ Item {
   NIconButtonHot {
     id: pill
     anchors.centerIn: parent
-    screen: root.screen
     icon: "wallpaper-selector"
     tooltipText: getCurrentWallpaperName() || pluginApi?.tr("bar.tooltip")
     onClicked: {
